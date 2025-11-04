@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace DoAn
 {
-    internal class Program
+    public class Program
     {
         static void readInput(string path, out int[,] grid, out (int, int) start, out (int, int) end, out List<(int, int)> mustVisit)
         {
