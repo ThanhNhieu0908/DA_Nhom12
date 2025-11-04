@@ -11,7 +11,7 @@ namespace DoAn
 {
     public class Program
     {
-        static void readInput(string path, out int[,] grid, out (int, int) start, out (int, int) end, out List<(int, int)> mustVisit)
+        static void readInput(string path, out int[,] grid, out int start, out int end)
         {
             if (!File.Exists(path))
             {
@@ -23,15 +23,8 @@ namespace DoAn
             int m = int.Parse(size[0]);
             int n = int.Parse(size[1]);
             string[] startAndEnd = line[indexLine++].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            start = (int.Parse(startAndEnd[0]), int.Parse(startAndEnd[1]));
-            end = (int.Parse(startAndEnd[2]), int.Parse(startAndEnd[3]));
-            int mustCount = int.Parse(line[indexLine++]);
-            mustVisit = new List<(int, int)>();
-            for (int i = 0; i < mustCount; i++)
-            {
-                string[] coords = line[indexLine++].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                mustVisit.Add((int.Parse(coords[0]), int.Parse(coords[1])));
-            }
+            start = int.Parse(startAndEnd[0]);
+            end = int.Parse(startAndEnd[1]);
             grid = new int[m, n];
             for (int i = 0; i < m; i++)
             {
@@ -41,6 +34,44 @@ namespace DoAn
                     grid[i, k] = int.Parse(part[k]);
                 }
             }
+        }
+
+        static Dictionary<int, List<(int, int)>> buidGraph(int[,] grid)
+        {
+            int m = grid.GetLength(0);
+            int n = grid.GetLength(1);
+            var graph = new Dictionary<int, List<(int, int)>>();
+            for(int i = 0; i < m;i++)
+            {
+                var node = new List<int>();
+                for(int j = 0; j < n; j++)
+                {
+                    if(grid[i, j] == 0) continue;
+                    node.Add((j, grid[i, j]);
+                }
+                graph[i] = node;
+            }
+            return graph;
+        }
+
+        static void printGraph(Dictionary<int, List<(int, int)>> graph)
+        {
+            foreach (var key in graph.Keys)
+            {
+                foreach(var value in graph[key])
+                {
+                    Console.Write($"({value.Item1}|{value.Item2}) ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void main(string[] args)
+        {
+            string inputPath = "input.txt";
+            readInput(inputPath, out int[,] grid, out int start, out int end);
+            var graph = buidGraph(grid);
+            printGraph(graph);
         }
     }
 }
