@@ -11,7 +11,6 @@ namespace DoAn
 {
     internal class Program
     {
-<<<<<<< HEAD
         static void readInput(string path, out int[,] grid, out (int, int) start, out (int, int) end, out List<(int, int)> mustVisit)
         {
             if (!File.Exists(path))
