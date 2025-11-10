@@ -66,6 +66,39 @@ namespace DoAn
             }
         }
 
+        static (Dictionary<(int, int), int> dist, Dictionary<(int, int), (int, int)> prev) dijkstra(Dictionary<(int, int), List<((int, int) neighbor, int weight)>> graph, (int, int) start)
+        {
+            var dist = new Dictionary<(int, int), int>();
+            var prev = new Dictionary<(int, int), (int, int)>();
+            var priorityQueue = new PriorityQueue<(int, int), int>();
+
+            foreach (var node in graph.Keys)
+            {
+                dist[node] = int.MaxValue;
+            }
+            dist[start] = 0;
+            priorityQueue.Enqueue(start, 0);
+            while (priorityQueue.Count > 0)
+            {
+                priorityQueue.TryDequeue(out (int, int) current, out int currentDist);
+                if (currentDist > dist[current])
+                {
+                    continue;
+                }
+                foreach (var value in graph[current])
+                {
+                    int newDist = currentDist + value.weight;
+                    if (newDist < dist[value.neighbor])
+                    {
+                        dist[value.neighbor] = newDist;
+                        prev[value.neighbor] = current;
+                        priorityQueue.Enqueue(value.neighbor, newDist);
+                    }
+                }
+            }
+            return (dist, prev);
+        }
+
         static void main(string[] args)
         {
             string inputPath = "input.txt";
