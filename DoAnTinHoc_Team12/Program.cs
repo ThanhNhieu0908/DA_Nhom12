@@ -11,30 +11,36 @@ namespace DoAn
 {
     public class Program
     {
-        static void readInput(string path, out int[,] grid, out int start, out int end)
+        static int[,] Matrix()
         {
-            if (!File.Exists(path))
-            {
-                throw new ArgumentNullException("input file missing grid data lines.");
-            }
-            string[] line = File.ReadAllLines(path);
-            int indexLine = 0;
-            string[] size = line[indexLine++].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            int m = int.Parse(size[0]);
-            int n = int.Parse(size[1]);
-            string[] startAndEnd = line[indexLine++].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            start = int.Parse(startAndEnd[0]);
-            end = int.Parse(startAndEnd[1]);
-            grid = new int[m, n];
+            Random random = new Random();
+            int m = random.Next(6, 10);
+            int n = random.Next(6, 10);
+            int[,] matrix = new int[m, n];
             for (int i = 0; i < m; i++)
             {
-                string[] part = line[indexLine++].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                for (int k = 0; k < n; k++)
+                for (int j = 0; j < n; j++)
                 {
-                    grid[i, k] = int.Parse(part[k]);
+                    matrix[i, j] = random.Next(1, 12);
                 }
             }
+            return matrix;
         }
+
+        static void printMatrix(int[,] matrix)
+        {
+            int m = matrix.GetLength(0);
+            int n = matrix.GetLength(1);
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    Console.Write($"{matrix[i, j]} ");
+                }
+                Console.WriteLine();
+            }
+        }
+
 
         static Dictionary<int, List<(int, int)>> buidGraph(int[,] grid)
         {
@@ -101,10 +107,8 @@ namespace DoAn
 
         static void main(string[] args)
         {
-            string inputPath = "input.txt";
-            readInput(inputPath, out int[,] grid, out int start, out int end);
-            var graph = buidGraph(grid);
-            printGraph(graph);
+            int[,] matrix = Matrix();
+            printMatrix(matrix);
         }
     }
 }
