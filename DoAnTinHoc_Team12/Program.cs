@@ -46,16 +46,28 @@ namespace DoAn
         {
             int m = grid.GetLength(0);
             int n = grid.GetLength(1);
-            var graph = new Dictionary<int, List<(int, int)>>();
-            for(int i = 0; i < m;i++)
+            var graph = new Dictionary<(int, int), List<((int, int), int)>>();
+            for (int i = 0; i < m;i++)
             {
-                var node = new List<int>();
+               
                 for(int j = 0; j < n; j++)
                 {
-                    if(grid[i, j] == 0) continue;
-                    node.Add((j, grid[i, j]);
+                    var neighbors = new List<((int, int), int)>();
+
+                    for (int k = 0; k < 4; k++)
+                    {
+                        int x = i + dx[k];
+                        int y = j + dy[k];
+
+                        if (x >= 0 && x < m && y >= 0 && y < n)
+                        {
+                            neighbors.Add(((x, y), grid[x, y]));
+                        }
+                    }
+
+                    graph[(i, j)] = neighbors;
                 }
-                graph[i] = node;
+                
             }
             return graph;
         }
@@ -72,40 +84,45 @@ namespace DoAn
             }
         }
 
-        static (Dictionary<(int, int), int> dist, Dictionary<(int, int), (int, int)> prev) dijkstra(Dictionary<(int, int), List<((int, int) neighbor, int weight)>> graph, (int, int) start)
+        static (Dictionary<(int, int), int>, Dictionary<(int, int), (int, int)>)
+         dijkstra(Dictionary<(int, int), List<((int, int), int)>> graph, (int, int) start)
         {
             var dist = new Dictionary<(int, int), int>();
             var prev = new Dictionary<(int, int), (int, int)>();
-            var priorityQueue = new PriorityQueue<(int, int), int>();
+            var pq = new PriorityQueue<(int, int), int>();
 
             foreach (var node in graph.Keys)
-            {
                 dist[node] = int.MaxValue;
-            }
+
             dist[start] = 0;
-            priorityQueue.Enqueue(start, 0);
-            while (priorityQueue.Count > 0)
+            pq.Enqueue(start, 0);
+
+            while (pq.Count > 0)
             {
-                priorityQueue.TryDequeue(out (int, int) current, out int currentDist);
-                if (currentDist > dist[current])
+                pq.TryDequeue(out (int, int) current, out int currentDist);
+
+                if (currentDist > dist[current]) continue;
+
+                foreach (var edge in graph[current])
                 {
-                    continue;
-                }
-                foreach (var value in graph[current])
-                {
-                    int newDist = currentDist + value.weight;
-                    if (newDist < dist[value.neighbor])
+                    var neighbor = edge.Item1;
+                    var weight = edge.Item2;
+
+                    int newDist = currentDist + weight;
+
+                    if (newDist < dist[neighbor])
                     {
-                        dist[value.neighbor] = newDist;
-                        prev[value.neighbor] = current;
-                        priorityQueue.Enqueue(value.neighbor, newDist);
+                        dist[neighbor] = newDist;
+                        prev[neighbor] = current;
+                        pq.Enqueue(neighbor, newDist);
                     }
                 }
             }
+
             return (dist, prev);
         }
 
-        static void main(string[] args)
+        static void Main(string[] args)
         {
             int[,] matrix = Matrix();
             printMatrix(matrix);
