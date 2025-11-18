@@ -6,60 +6,66 @@ using System.Threading.Tasks;
 
 namespace DoAnTinHoc_Team12
 {
-    public class TimDuongDi<T>
+    public class DoThiDuongDi<T>
     {
-        public static (Dictionary<T, double>, List<T>) Dijkstra(DoThi<T> graph, T start, T end)
-        {
-            var dist = new Dictionary<T, double>();
-            var prev = new Dictionary<T, T>();
-            var visited = new HashSet<T>();
-
-            foreach (var vertex in graph.DanhSachKe.Keys)
+     
+            public static (Dictionary<T, double>, List<T>) Dijkstra(DoThi<T> graph, T start, T end)
             {
-                dist[vertex] = double.MaxValue;
-                prev[vertex] = default(T);
-            }
+                var dist = new Dictionary<T, double>();
+                var prev = new Dictionary<T, T>();
+                var visited = new HashSet<T>();
 
-            dist[start] = 0;
-
-            while (visited.Count < graph.DanhSachKe.Count)
-            {
-                T u = dist
-                    .Where(x => !visited.Contains(x.Key))
-                    .OrderBy(x => x.Value)
-                    .First().Key;
-
-                visited.Add(u);
-
-                if (EqualityComparer<T>.Default.Equals(u, end))
-                    break;
-
-                foreach (var edge in graph.DanhSachKe[u])
+                foreach (var vertex in graph.DanhSachKe.Keys)
                 {
-                    var v = edge.CanhKe;
-                    double w = edge.TrongSo;
+                    dist[vertex] = double.MaxValue;
+                    prev[vertex] = default(T);
+                }
 
-                    if (!visited.Contains(v) && dist[u] + w < dist[v])
+                dist[start] = 0;
+
+                while (visited.Count < graph.DanhSachKe.Count)
+                {
+                    // Chọn đỉnh có dist nhỏ nhất chưa thăm
+                    T u = dist.Where(x => !visited.Contains(x.Key))
+                              .OrderBy(x => x.Value)
+                              .First().Key;
+
+                    visited.Add(u);
+
+                    if (EqualityComparer<T>.Default.Equals(u, end))
+                        break;
+
+                    foreach (var edge in graph.DanhSachKe[u])
                     {
-                        dist[v] = dist[u] + w;
-                        prev[v] = u;
+                        var v = edge.CanhKe;
+                        double w = edge.TrongSo;
+
+                        if (!visited.Contains(v) &&
+                            dist[u] + w < dist[v])
+                        {
+                            dist[v] = dist[u] + w;
+                            prev[v] = u;
+                        }
                     }
                 }
-            }
 
-            // Truy vết đường đi
-            var path = new List<T>();
-            T current = end;
-            while (!EqualityComparer<T>.Default.Equals(current, default(T)))
-            {
-                path.Insert(0, current);
-                current = prev[current];
-                if (EqualityComparer<T>.Default.Equals(current, default(T)))
-                    break;
-            }
-            path.Insert(0, start);
+                // Truy vết đường đi
+                var path = new List<T>();
+                T current = end;
 
-            return (dist, path);
+                while (!EqualityComparer<T>.Default.Equals(current, default(T)))
+                {
+                    path.Insert(0, current);
+                    current = prev[current];
+
+                    if (EqualityComparer<T>.Default.Equals(current, default(T)))
+                        break;
+                }
+
+                path.Insert(0, start);
+
+                return (dist, path);
+            }
         }
     }
-}
+
