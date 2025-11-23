@@ -25,7 +25,7 @@ namespace DoAnTinHoc_Team12
 
                 while (visited.Count < graph.DanhSachKe.Count)
                 {
-                    // Chọn đỉnh có dist nhỏ nhất chưa thăm
+                    // Chọn đỉnh có dist nhỏ nhất chưa đi đến
                     T u = dist.Where(x => !visited.Contains(x.Key))
                               .OrderBy(x => x.Value)
                               .First().Key;
