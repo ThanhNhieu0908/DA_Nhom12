@@ -1,14 +1,21 @@
+
+
+using System.Net.Http.Headers;
+using System.Windows.Forms;
+
 namespace DoAnTinHoc_Team12
 {
     public partial class Form1 : Form
     {
-        DoThi<int> graph;
+        private DoThi graph;
+        private List<Canh> canh;
 
         public Form1()
         {
             InitializeComponent();
 
-            graph = new DoThi<int>();
+            graph = new DoThi();
+            canh = new List<Canh>();
 
             // Tạo danh sách đỉnh 1-5
             var dsDinh = new List<int> { 1, 2, 3, 4, 5 };
@@ -16,6 +23,28 @@ namespace DoAnTinHoc_Team12
 
             HienThiDoThi();
         }
+        private void TaoViTriNut()
+        {
+            viTriNut = new Dictionary<int, Point>();
+
+            int n = graph.DanhSachKe.Count;
+            int centerX = pictureBox1.Width / 2;
+            int centerY = pictureBox1.Height / 2;
+            int radius = Math.Min(centerX, centerY) - 50;
+
+            int i = 0;
+            foreach (var node in graph.DanhSachKe.Keys)
+            {
+                double angle = 2 * Math.PI * i / n;
+
+                int x = centerX + (int)(radius * Math.Cos(angle));
+                int y = centerY + (int)(radius * Math.Sin(angle));
+
+                viTriNut[node] = new Point(x, y);
+                i++;
+            }
+        }
+
 
         private void btnTinhDuongDi_Click(object sender, EventArgs e)
         {
@@ -24,24 +53,135 @@ namespace DoAnTinHoc_Team12
                 int start = int.Parse(txtStart.Text);
                 int end = int.Parse(txtEnd.Text);
 
-                var (dist, path) = DoThiDuongDi<int>.Dijkstra(graph, start, end);
+                var (dist, path, log) = DoThiDuongDi.Dijkstra(graph, start, end, canh);
 
+                // Hiển thị kết quả
                 txtKetQua.Clear();
-                txtKetQua.AppendText($"Khoảng cách ngắn nhất: {dist[end]}\r\n");
-                txtKetQua.AppendText("Đường đi: ");
-                foreach (var p in path)
-                    txtKetQua.AppendText(p + " ");
+                txtKetQua.AppendText($"Khoảng cách: {dist[end]}\r\n");
+                txtKetQua.AppendText("Đường đi: " + string.Join(" ", path));
+
+                // Hiển thị log
+                txtLog.Text = log;
+
+                // Vẽ đường đi
+                TaoViTriNut();
+                VeDoThiVaDuongDi(path);
             }
             catch
             {
-                MessageBox.Show("Thông báo","Nhập sai! Vui lòng nhập số nguyên hợp lệ.",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi nhập!", "Nhập số nguyên hợp lệ!");
             }
         }
+
+        private Dictionary<int, Point> viTriNut = new Dictionary<int, Point>();
+
+        private void VeDoThiVaDuongDi(List<int> duongDi)
+        {
+            Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                using (Font fontNode = new Font("Arial", 12, FontStyle.Bold))
+                using (Font fontWeight = new Font("Arial", 10, FontStyle.Bold))
+                {
+                    StringFormat sf = new StringFormat()
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+
+                    Pen penThuong = new Pen(Color.Silver, 2);
+                    Pen penDuongDi = new Pen(Color.OrangeRed, 3);
+
+                    //--------------------------------------------------
+                    // 1. VẼ CẠNH + TRỌNG SỐ
+                    //--------------------------------------------------
+                    foreach (var u in graph.DanhSachKe.Keys)
+                    {
+                        if (!viTriNut.ContainsKey(u)) continue;
+
+                        foreach (var kvp in graph.DanhSachKe[u])
+                        {
+                            int v = kvp.Dinh;     // đỉnh kề
+                            int w =(int) kvp.TrongSo;   // trọng số
+
+                            if (u < v) // tránh vẽ trùng cạnh
+                            {
+                                if (!viTriNut.ContainsKey(v)) continue;
+
+                                Point pu = viTriNut[u];
+                                Point pv = viTriNut[v];
+
+                                // Kiểm tra cạnh có thuộc đường đi không
+                                bool laCanhDuongDi = false;
+                                for (int i = 0; i < duongDi.Count - 1; i++)
+                                {
+                                    if ((duongDi[i] == u && duongDi[i + 1] == v) ||
+                                        (duongDi[i] == v && duongDi[i + 1] == u))
+                                    {
+                                        laCanhDuongDi = true;
+                                        break;
+                                    }
+                                }
+
+                                Pen penVe = laCanhDuongDi ? penDuongDi : penThuong;
+
+                                // Vẽ cạnh
+                                g.DrawLine(penVe, pu, pv);
+
+                                //--------------------------------------------------
+                                // TÍNH TỌA ĐỘ HIỂN THỊ TRỌNG SỐ (KHÔNG BỊ LỆCH)
+                                //--------------------------------------------------
+                                float midX = (pu.X + pv.X) / 2f;
+                                float midY = (pu.Y + pv.Y) / 2f;
+
+                                float dx = pv.X - pu.X;
+                                float dy = pv.Y - pu.Y;
+
+                                float length = (float)Math.Sqrt(dx * dx + dy * dy);
+                                if (length == 0) length = 1; // tránh chia 0
+
+                                // vector vuông góc để lệch chữ ra ngoài cạnh
+                                float offsetX = -dy / length * 14f;  // 14px lệch khỏi đường
+                                float offsetY = dx / length * 14f;
+
+                                PointF pos = new PointF(midX + offsetX, midY + offsetY);
+
+                                // Vẽ trọng số
+                                g.DrawString(w.ToString(), fontWeight, Brushes.DarkBlue, pos);
+                            }
+                        }
+                    }
+
+                    //--------------------------------------------------
+                    // 2. VẼ NÚT
+                    //--------------------------------------------------
+                    foreach (var v in graph.DanhSachKe.Keys)
+                    {
+                        if (!viTriNut.ContainsKey(v)) continue;
+
+                        Point p = viTriNut[v];
+                        Rectangle rect = new Rectangle(p.X - 18, p.Y - 18, 36, 36);
+
+                        Brush brush = duongDi.Contains(v) ? Brushes.Gold : Brushes.LightSkyBlue;
+
+                        g.FillEllipse(brush, rect);
+                        g.DrawEllipse(Pens.Black, rect);
+                        g.DrawString(v.ToString(), fontNode, Brushes.Black, rect, sf);
+                    }
+                }
+            }
+
+            pictureBox1.Image = bmp;
+        }
+
 
         private void btnRandomGraph_Click(object sender, EventArgs e)
         {
             var dsDinh = new List<int> { 1, 2, 3, 4, 5 };
-            graph = new DoThi<int>();
+            graph = new DoThi();
             graph.TaoNgauNhien(dsDinh);
             HienThiDoThi();
         }
@@ -64,7 +204,7 @@ namespace DoAnTinHoc_Team12
                 int col = 0;
                 foreach (var v in graph.DanhSachKe.Keys)
                 {
-                    var edge = graph.DanhSachKe[u].Find(c => c.CanhKe.Equals(v));
+                    var edge = graph.DanhSachKe[u].Find(c => c.Dinh.Equals(v));
                     dgvMatrix.Rows[rowIndex].Cells[col].Value = edge != null ? edge.TrongSo : 0;
                     col++;
                 }
@@ -86,6 +226,11 @@ namespace DoAnTinHoc_Team12
         }
 
         private void lblKetQua_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }

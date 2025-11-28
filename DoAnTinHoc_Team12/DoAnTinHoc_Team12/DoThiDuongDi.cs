@@ -6,66 +6,82 @@ using System.Threading.Tasks;
 
 namespace DoAnTinHoc_Team12
 {
-    public class DoThiDuongDi<T>
+    public class DoThiDuongDi
     {
-     
-            public static (Dictionary<T, double>, List<T>) Dijkstra(DoThi<T> graph, T start, T end)
+
+        public static (Dictionary<int, double>, List<int>, string) Dijkstra(DoThi graph, int start, int end, List<Canh> u)
+        {
+            var dist = new Dictionary<int, double>();
+            var priority = new PriorityQueue<int, double>();
+            var prev = new Dictionary<int, int>();
+            var visited = new HashSet<int>();
+            var log = new StringBuilder();
+
+            // Khởi tạo
+            foreach (var node in graph.DanhSachKe.Keys)
+                dist[node] = double.MaxValue;
+
+            dist[start] = 0;
+            priority.Enqueue(start, 0);
+            log.AppendLine($"Khởi tạo: dist[{start}] = 0");
+
+            while (priority.Count > 0)
             {
-                var dist = new Dictionary<T, double>();
-                var prev = new Dictionary<T, T>();
-                var visited = new HashSet<T>();
+                priority.TryDequeue(out int node, out double minDist);
 
-                foreach (var vertex in graph.DanhSachKe.Keys)
+                log.AppendLine($"Lấy đỉnh {node} ra khỏi hàng đợi với dist = {minDist}");
+                visited.Add(node);
+                if(node == end)
                 {
-                    dist[vertex] = double.MaxValue;
-                    prev[vertex] = default(T);
+                    break;
                 }
-
-                dist[start] = 0;
-
-                while (visited.Count < graph.DanhSachKe.Count)
+                if (minDist > dist[node])
                 {
-                    // Chọn đỉnh có dist nhỏ nhất chưa đi đến
-                    T u = dist.Where(x => !visited.Contains(x.Key))
-                              .OrderBy(x => x.Value)
-                              .First().Key;
-
-                    visited.Add(u);
-
-                    if (EqualityComparer<T>.Default.Equals(u, end))
-                        break;
-
-                    foreach (var edge in graph.DanhSachKe[u])
+                    continue;
+                }
+                foreach (var value in graph.DanhSachKe[node])
+                {
+                    double newDist = minDist + value.TrongSo;
+                    if (newDist < dist[value.Dinh])
                     {
-                        var v = edge.CanhKe;
-                        double w = edge.TrongSo;
-
-                        if (!visited.Contains(v) &&
-                            dist[u] + w < dist[v])
-                        {
-                            dist[v] = dist[u] + w;
-                            prev[v] = u;
-                        }
+                        dist[value.Dinh] = newDist;
+                        prev[value.Dinh] = node;
+                        priority.Enqueue(value.Dinh, newDist);
+                        log.AppendLine($"Cập nhật {value.Dinh}: dist mới = {newDist}");
+                    }
+                    else
+                    {
+                        log.AppendLine(
+                            $"Bỏ qua {value.Dinh}: dist hiện tại {dist[value.Dinh]} tốt hơn {newDist}"
+                        );
                     }
                 }
-
-                // Truy vết đường đi
-                var path = new List<T>();
-                T current = end;
-
-                while (!EqualityComparer<T>.Default.Equals(current, default(T)))
-                {
-                    path.Insert(0, current);
-                    current = prev[current];
-
-                    if (EqualityComparer<T>.Default.Equals(current, default(T)))
-                        break;
-                }
-
-                path.Insert(0, start);
-
-                return (dist, path);
             }
+
+            // reconstruct path
+            var path = new List<int>();
+            int curr = end;
+
+            if (!prev.ContainsKey(curr) && !curr.Equals(start))
+            {
+                log.AppendLine("Không tìm thấy đường đi!");
+                return (dist, new List<int>(), log.ToString());
+            }
+
+            path.Insert(0, curr);
+            while (!curr.Equals(start))
+            {
+                curr = prev[curr];
+                path.Insert(0, curr);
+            }
+
+            log.AppendLine(
+                $"Đường đi: {string.Join(" -> ", path)} | Tổng trọng số: {dist[end]}"
+            );
+
+            return (dist, path, log.ToString());
         }
+
     }
+}
 
