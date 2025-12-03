@@ -51,7 +51,7 @@
             dgvMatrix.Location = new Point(20, 60);
             dgvMatrix.Name = "dgvMatrix";
             dgvMatrix.RowHeadersWidth = 51;
-            dgvMatrix.Size = new Size(520, 300);
+            dgvMatrix.Size = new Size(669, 336);
             dgvMatrix.TabIndex = 0;
             // 
             // txtStart
@@ -70,27 +70,27 @@
             // 
             // txtKetQua
             // 
-            txtKetQua.Location = new Point(100, 380);
+            txtKetQua.Location = new Point(100, 449);
             txtKetQua.Multiline = true;
             txtKetQua.Name = "txtKetQua";
             txtKetQua.ReadOnly = true;
-            txtKetQua.Size = new Size(440, 120);
+            txtKetQua.Size = new Size(589, 163);
             txtKetQua.TabIndex = 10;
             // 
             // txtLog
             // 
             txtLog.Font = new Font("Consolas", 10F);
-            txtLog.Location = new Point(580, 170);
+            txtLog.Location = new Point(974, 41);
             txtLog.Multiline = true;
             txtLog.Name = "txtLog";
             txtLog.ReadOnly = true;
             txtLog.ScrollBars = ScrollBars.Vertical;
-            txtLog.Size = new Size(320, 190);
+            txtLog.Size = new Size(481, 230);
             txtLog.TabIndex = 7;
             // 
             // btnRandomGraph
             // 
-            btnRandomGraph.Location = new Point(580, 60);
+            btnRandomGraph.Location = new Point(695, 88);
             btnRandomGraph.Name = "btnRandomGraph";
             btnRandomGraph.Size = new Size(140, 32);
             btnRandomGraph.TabIndex = 4;
@@ -99,7 +99,7 @@
             // 
             // btnTinhDuongDi
             // 
-            btnTinhDuongDi.Location = new Point(580, 110);
+            btnTinhDuongDi.Location = new Point(695, 183);
             btnTinhDuongDi.Name = "btnTinhDuongDi";
             btnTinhDuongDi.Size = new Size(140, 32);
             btnTinhDuongDi.TabIndex = 5;
@@ -109,9 +109,9 @@
             // pictureBox1
             // 
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
-            pictureBox1.Location = new Point(920, 30);
+            pictureBox1.Location = new Point(856, 293);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(380, 420);
+            pictureBox1.Size = new Size(599, 444);
             pictureBox1.TabIndex = 8;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
@@ -137,7 +137,7 @@
             // lblKetQua
             // 
             lblKetQua.AutoSize = true;
-            lblKetQua.Location = new Point(20, 380);
+            lblKetQua.Location = new Point(20, 449);
             lblKetQua.Name = "lblKetQua";
             lblKetQua.Size = new Size(63, 20);
             lblKetQua.TabIndex = 9;
@@ -146,7 +146,7 @@
             // lblLog
             // 
             lblLog.AutoSize = true;
-            lblLog.Location = new Point(580, 145);
+            lblLog.Location = new Point(848, 44);
             lblLog.Name = "lblLog";
             lblLog.Size = new Size(106, 20);
             lblLog.TabIndex = 6;
@@ -154,7 +154,7 @@
             // 
             // Form1
             // 
-            ClientSize = new Size(1350, 550);
+            ClientSize = new Size(1488, 780);
             Controls.Add(lblStart);
             Controls.Add(txtStart);
             Controls.Add(lblEnd);

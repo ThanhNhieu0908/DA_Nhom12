@@ -69,7 +69,7 @@ namespace DoAnTinHoc_Team12
             }
             catch
             {
-                MessageBox.Show("Lỗi nhập!", "Nhập số nguyên hợp lệ!");
+                MessageBox.Show("Chưa nhập điểm đến và điểm đi!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -95,10 +95,10 @@ namespace DoAnTinHoc_Team12
                     Pen penThuong = new Pen(Color.Silver, 2);
                     Pen penDuongDi = new Pen(Color.OrangeRed, 3);
 
-                    //--------------------------------------------------
-                    // 1. VẼ CẠNH + TRỌNG SỐ
-                    //--------------------------------------------------
-                    foreach (var u in graph.DanhSachKe.Keys)
+
+                    //  VẼ CẠNH + TRỌNG SỐ
+
+                    foreach (var u in graph.DanhSachKe.Keys.OrderBy(x => x))
                     {
                         if (!viTriNut.ContainsKey(u)) continue;
 
@@ -131,23 +131,13 @@ namespace DoAnTinHoc_Team12
                                 // Vẽ cạnh
                                 g.DrawLine(penVe, pu, pv);
 
-                                //--------------------------------------------------
+
                                 // TÍNH TỌA ĐỘ HIỂN THỊ TRỌNG SỐ (KHÔNG BỊ LỆCH)
-                                //--------------------------------------------------
-                                float midX = (pu.X + pv.X) / 2f;
-                                float midY = (pu.Y + pv.Y) / 2f;
 
-                                float dx = pv.X - pu.X;
-                                float dy = pv.Y - pu.Y;
+                                float weightX = (pu.X + pv.X) / 2f;
+                                float weightY = (pu.Y + pv.Y) / 2f;
 
-                                float length = (float)Math.Sqrt(dx * dx + dy * dy);
-                                if (length == 0) length = 1; // tránh chia 0
-
-                                // vector vuông góc để lệch chữ ra ngoài cạnh
-                                float offsetX = -dy / length * 14f;  // 14px lệch khỏi đường
-                                float offsetY = dx / length * 14f;
-
-                                PointF pos = new PointF(midX + offsetX, midY + offsetY);
+                                PointF pos = new PointF(weightX, weightY);
 
                                 // Vẽ trọng số
                                 g.DrawString(w.ToString(), fontWeight, Brushes.DarkBlue, pos);
@@ -155,9 +145,9 @@ namespace DoAnTinHoc_Team12
                         }
                     }
 
-                    //--------------------------------------------------
-                    // 2. VẼ NÚT
-                    //--------------------------------------------------
+                  
+                    //  VẼ NÚT
+                
                     foreach (var v in graph.DanhSachKe.Keys)
                     {
                         if (!viTriNut.ContainsKey(v)) continue;

@@ -21,7 +21,7 @@ namespace DoAnTinHoc_Team12
             if (!DanhSachKe.ContainsKey(dinh))
                 DanhSachKe[dinh] = new List<Canh>();
         }
-         public void ThemCanh(int from, int to, double trongSo)
+         public void ThemCanh(int from, int to, int trongSo)
         {
             ThemDinh(from);
             ThemDinh(to);
@@ -31,12 +31,22 @@ namespace DoAnTinHoc_Team12
         // Random đồ thị hoàn chỉnh (đầy đủ cạnh)
         public void TaoNgauNhien(List<int> danhSachDinh)
         {
+            DanhSachKe.Clear();
+
+            foreach (var u in danhSachDinh)
+                ThemDinh(u);
+
             foreach (var u in danhSachDinh)
             {
                 foreach (var v in danhSachDinh)
                 {
-                    double w = rd.Next(1, 20);
-                    ThemCanh(u, v, w);
+                    if (u < v)   
+                    {
+                        int w = rd.Next(1, 20);  
+
+                        DanhSachKe[u].Add(new Canh(v, w));
+                        DanhSachKe[v].Add(new Canh(u, w));
+                    }
                 }
             }
         }

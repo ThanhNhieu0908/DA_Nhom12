@@ -9,7 +9,7 @@ namespace DoAnTinHoc_Team12
     public class Canh
     {
         private int dinh;
-        private double _trongSo;
+        private int _trongSo;
 
         public Canh()
         {
@@ -17,12 +17,12 @@ namespace DoAnTinHoc_Team12
             TrongSo = 0;
         }
 
-        public Canh(int dinh, double trongSo)
+        public Canh(int dinh, int trongSo)
         {
             Dinh = dinh;
             TrongSo = trongSo;
         }
-        public double TrongSo { get => _trongSo; set => _trongSo = value; }
+        public int TrongSo { get => _trongSo; set => _trongSo = value; }
         public int Dinh { get => dinh; set => dinh = value; }
     }
 }
