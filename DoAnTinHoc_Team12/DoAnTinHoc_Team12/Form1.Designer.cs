@@ -41,6 +41,7 @@
             lblEnd = new Label();
             lblKetQua = new Label();
             lblLog = new Label();
+            txtthoat = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvMatrix).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -152,9 +153,20 @@
             lblLog.TabIndex = 6;
             lblLog.Text = "Log thuật toán";
             // 
+            // txtthoat
+            // 
+            txtthoat.Location = new Point(313, 691);
+            txtthoat.Name = "txtthoat";
+            txtthoat.Size = new Size(94, 29);
+            txtthoat.TabIndex = 11;
+            txtthoat.Text = "Thoát";
+            txtthoat.UseVisualStyleBackColor = true;
+            txtthoat.Click += txtthoat_Click;
+            // 
             // Form1
             // 
             ClientSize = new Size(1488, 780);
+            Controls.Add(txtthoat);
             Controls.Add(lblStart);
             Controls.Add(txtStart);
             Controls.Add(lblEnd);
@@ -174,5 +186,6 @@
             ResumeLayout(false);
             PerformLayout();
         }
+        private Button txtthoat;
     }
 }

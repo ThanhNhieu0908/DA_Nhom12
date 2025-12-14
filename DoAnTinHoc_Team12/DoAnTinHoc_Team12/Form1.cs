@@ -105,7 +105,7 @@ namespace DoAnTinHoc_Team12
                         foreach (var kvp in graph.DanhSachKe[u])
                         {
                             int v = kvp.Dinh;     // đỉnh kề
-                            int w =(int) kvp.TrongSo;   // trọng số
+                            int w = (int)kvp.TrongSo;   // trọng số
 
                             if (u < v) // tránh vẽ trùng cạnh
                             {
@@ -145,9 +145,9 @@ namespace DoAnTinHoc_Team12
                         }
                     }
 
-                  
+
                     //  VẼ NÚT
-                
+
                     foreach (var v in graph.DanhSachKe.Keys)
                     {
                         if (!viTriNut.ContainsKey(v)) continue;
@@ -223,6 +223,16 @@ namespace DoAnTinHoc_Team12
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void txtthoat_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn thoát không?","Xác nhận",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
     }
 }
