@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,29 +29,46 @@ namespace DoAnTinHoc_Team12
             DanhSachKe[from].Add(new Canh(to, trongSo));
         }
 
-        // Random đồ thị hoàn chỉnh (đầy đủ cạnh)
-        public void TaoNgauNhien(List<int> danhSachDinh)
+        // Random đồ thị
+        public void TaoNgauNhien(int soLuongDinh)
         {
             DanhSachKe.Clear();
-
-            foreach (var u in danhSachDinh)
-                ThemDinh(u);
-
-            foreach (var u in danhSachDinh)
+            int bacToiDa = 3;
+            for(int i = 1; i <= soLuongDinh; i++)
             {
-                foreach (var v in danhSachDinh)
+                ThemDinh(i);
+            }
+            for(int i = 1; i < soLuongDinh; i++)
+            {
+                int trongSo = rd.Next(1, 20);
+                ThemCanh(i, i + 1, trongSo);
+            }
+            for(int u = 1; u <= soLuongDinh; u++)
+            {
+                int soBac = rd.Next(1, bacToiDa);
+                while (DanhSachKe[u].Count < soBac)
                 {
-                    if (u < v)   
+                    int v = rd.Next(1, soLuongDinh);
+                    if(u != v && !KiemTraCanhTonTai(u, v))
                     {
-                        int w = rd.Next(1, 20);  
-
-                        DanhSachKe[u].Add(new Canh(v, w));
-                        DanhSachKe[v].Add(new Canh(u, w));
+                        int trongSo = rd.Next(1, 20);
+                        ThemCanh(u, v, trongSo);
                     }
                 }
             }
         }
 
+        private bool KiemTraCanhTonTai(int u, int v)
+        {
+            foreach (var canh in DanhSachKe[u])
+            {
+                if(canh.Dinh == v)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
 

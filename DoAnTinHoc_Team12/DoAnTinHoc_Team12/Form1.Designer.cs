@@ -42,6 +42,8 @@
             lblKetQua = new Label();
             lblLog = new Label();
             txtthoat = new Button();
+            txtDinh = new TextBox();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvMatrix).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -163,9 +165,28 @@
             txtthoat.UseVisualStyleBackColor = true;
             txtthoat.Click += txtthoat_Click;
             // 
+            // txtDinh
+            // 
+            txtDinh.Location = new Point(652, 23);
+            txtDinh.Name = "txtDinh";
+            txtDinh.Size = new Size(81, 27);
+            txtDinh.TabIndex = 12;
+            txtDinh.TextChanged += textBox1_TextChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(578, 27);
+            label1.Name = "label1";
+            label1.Size = new Size(59, 20);
+            label1.TabIndex = 13;
+            label1.Text = "Số đỉnh";
+            // 
             // Form1
             // 
             ClientSize = new Size(1488, 780);
+            Controls.Add(label1);
+            Controls.Add(txtDinh);
             Controls.Add(txtthoat);
             Controls.Add(lblStart);
             Controls.Add(txtStart);
@@ -181,11 +202,14 @@
             Controls.Add(txtKetQua);
             Name = "Form1";
             Text = "Tìm đường đi ngắn nhất – Dijkstra";
+            Load += Form1_Load_1;
             ((System.ComponentModel.ISupportInitialize)dgvMatrix).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
         private Button txtthoat;
+        private TextBox txtDinh;
+        private Label label1;
     }
 }

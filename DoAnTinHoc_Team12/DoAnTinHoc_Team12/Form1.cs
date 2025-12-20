@@ -17,11 +17,6 @@ namespace DoAnTinHoc_Team12
             graph = new DoThi();
             canh = new List<Canh>();
 
-            // Tạo danh sách đỉnh 1-5
-            var dsDinh = new List<int> { 1, 2, 3, 4, 5 };
-            graph.TaoNgauNhien(dsDinh);
-
-            HienThiDoThi();
         }
         private void TaoViTriNut()
         {
@@ -92,7 +87,7 @@ namespace DoAnTinHoc_Team12
                         LineAlignment = StringAlignment.Center
                     };
 
-                    Pen penThuong = new Pen(Color.Silver, 2);
+                    Pen penThuong = new Pen(Color.Black, 2);
                     Pen penDuongDi = new Pen(Color.OrangeRed, 3);
 
 
@@ -167,13 +162,24 @@ namespace DoAnTinHoc_Team12
             pictureBox1.Image = bmp;
         }
 
-
         private void btnRandomGraph_Click(object sender, EventArgs e)
         {
-            var dsDinh = new List<int> { 1, 2, 3, 4, 5 };
-            graph = new DoThi();
-            graph.TaoNgauNhien(dsDinh);
-            HienThiDoThi();
+            if (txtDinh.Text == "")
+            {
+                MessageBox.Show("Bạn chưa nhập số lượng đỉnh", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else
+            {
+                int soLuongDinh = int.Parse(txtDinh.Text);
+                if (soLuongDinh <= 1)
+                {
+                    MessageBox.Show("Hãy nhập số lớn 1", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                graph.TaoNgauNhien(soLuongDinh);
+                HienThiDoThi();
+            }
         }
 
         private void HienThiDoThi()
@@ -227,12 +233,23 @@ namespace DoAnTinHoc_Team12
 
         private void txtthoat_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn thoát không?","Xác nhận",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn thoát không?", "Xác nhận",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
                 Application.Exit();
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

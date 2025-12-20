@@ -14,7 +14,6 @@ namespace DoAnTinHoc_Team12
             var dist = new Dictionary<int, double>();
             var priority = new PriorityQueue<int, double>();
             var prev = new Dictionary<int, int>();
-            var visited = new HashSet<int>();
             var log = new StringBuilder();
 
             // Khởi tạo
@@ -30,7 +29,6 @@ namespace DoAnTinHoc_Team12
                 priority.TryDequeue(out int node, out double minDist);
 
                 log.AppendLine($"Lấy đỉnh {node} ra khỏi hàng đợi với dist = {minDist}");
-                visited.Add(node);
                 if(node == end)
                 {
                     break;
